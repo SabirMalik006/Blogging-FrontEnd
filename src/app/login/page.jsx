@@ -20,13 +20,21 @@ export default function LoginPage() {
   
       // yahan backend se token uthao
       const token = res.data.token || res.data.accessToken;
+      const user = res.data.user;
   
       if (token) {
         localStorage.setItem("token", token); // token save
+        localStorage.setItem("user", JSON.stringify(user)); // user data save
       }
   
       toast.success("Login successful!");
-      router.push("/dashboard");
+      
+      // Redirect based on user role
+      if (user?.role === "admin") {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid credentials");
     }
